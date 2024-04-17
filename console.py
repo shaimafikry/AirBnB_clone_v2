@@ -125,7 +125,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         # sepreare paramteres, put it into dictionary
-        parameters = {}
+        parameters = dict()
         for i in d_args[1:]:
             i = i.split('=')
             value = i[1]
