@@ -4,6 +4,7 @@ import unittest
 from models.base_model import BaseModel
 from models import storage
 import os
+from engine.file_storage import FileStorage
 
 
 class test_fileStorage(unittest.TestCase):
@@ -104,6 +105,10 @@ class test_fileStorage(unittest.TestCase):
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
-        from models.engine.file_storage import FileStorage
         print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_do_create(self):
+        """ test the format of input
+        the record increses after creation"""
+        pass
