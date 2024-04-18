@@ -131,14 +131,13 @@ class HBNBCommand(cmd.Cmd):
             value = i[1]
             # finds and replaces the _ and the "
             value = value.replace('_', " ")
-            value = value.replace('"', "")
             # case string
-            # if value[0] == '"':
-            #     value = value.replace('"', "")
-            #     if '"' in value:
-            #         value = value.replace('"', '\"')
+            if value[0] == '"':
+                value = value.replace('"', "")
+                if '"' in value:
+                    value = value.replace('"', '\"')
             # case float
-            if '.' in value:
+            elif '.' in value:
                 value = float(value)
             # case integer
             else:
