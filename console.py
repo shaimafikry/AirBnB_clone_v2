@@ -131,20 +131,22 @@ class HBNBCommand(cmd.Cmd):
             value = i[1]
             # finds and replaces the _ and the "
             value = value.replace('_', " ")
+            value = value.replace('"', "")
             # case string
-            if value[0] == '"':
-                value = value.replace('"', "")
-                if '"' in value:
-                    value = value.replace('"', '\"')
+            # if value[0] == '"':
+            #     value = value.replace('"', "")
+            #     if '"' in value:
+            #         value = value.replace('"', '\"')
             # case float
-            elif '.' in value:
+            if '.' in value:
                 value = float(value)
             # case integer
             else:
                 value = int(value)
-            para = i[0]
-            new_instance.__dict__[para] = value
-        HBNBCommand.classes[cls_name].save(new_instance)
+            key = i[0]
+            new_instance.__dict__[key] = value
+        my_class = HBNBCommand.classes[cls_name]
+        my_class.save(new_instance)
         print(new_instance.id)
 
     def help_create(self):
