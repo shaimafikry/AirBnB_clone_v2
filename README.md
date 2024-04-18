@@ -145,3 +145,4 @@ Usage: <class_name>.update(<_id>, <dictionary>)
 1- we moved dir engine, put it inside models dir
 2- we updedated the do_create function to have more parametres
 3- we added a sql setp file
+4-  we added a del func and filter output of objects
