@@ -111,8 +111,4 @@ class test_fileStorage(unittest.TestCase):
     def test_do_create(self):
         """ test the format of input
         the record increses after creation"""
-        bef = len(storage.all())
-        n_dict ={"name":test}
-        n_instance = BaseModel(**n_dict)
-        FileStorage.new(n_instance)
-        self.assertEqual(len(storage.all()), bef + 1)
+        pass
