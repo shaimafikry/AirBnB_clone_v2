@@ -11,32 +11,38 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from datetime import datetime
+
 
 # script that prints the State object with the name
 # passed as argument from the database hbtn_0e_6_usa
-class DBStorage (Base):
+class DBStorage ():
     """ the new engine"""
     __engine=None
     __session=None
     def __init__(self):
-        """condtructor of engine"""
+        """constructor of engine"""
         user = os.getenv('HBNB_MYSQL_USER')
         paswd = os.getenv('HBNB_MYSQL_PWD')
         host = os.getenv('HBNB_MYSQL_HOST')
         database = os.getenv('HBNB_MYSQL_DB')
         self.__engine = create_engine("mysql+mysqldb://"+user+':'+paswd+'@'+host+'/'+database, pool_pre_ping=True,)
-        Base.metadata.create_all(self.__engine)
         if os.getenv('HBNB_ENV') == "test":
-            self.__session.drop_all()
+            Base.metadata.drop_all(self.__engine)
+        Base.metadata.create_all(self.__engine)
+        session = sessionmaker(self.__engine)
+        self.__session = scoped_session(session)
+
             
     def all(self, cls=None):
         """get all data on the current session"""
         dict_ins = {}
         name = cls.__name__
-        key = name + '.'+ cls.id
+        
         if cls:
-            data = self.__session.query(cls)
+            data = self.__session.query(cls).all()
             for i in data:
+                key = name + '.'+ i.id
                 dict[key] = i
             return dict_ins
         else:
@@ -47,18 +53,19 @@ class DBStorage (Base):
                     'Review': Review
                   }
             for value in classes.values():
-                data = self.__session.query(value)
+                data = self.__session.query(value).all()
                 name = cls.__name__
                 key = name + '.'+ value.id
                 for i in data:
+                    key = name + '.'+ i.id
                     dict[key] = i
             return dict_ins
 
 
     def new(self, obj):
         """ add the object to the current database session (self.__session) """
-        cls_name = obj.__class__.__name__
-        self.__session.add(cls_name(obj))
+        # cls_name = obj.__class__.__name__
+        self.__session.add(obj)
 
 
     def save(self):
@@ -69,8 +76,8 @@ class DBStorage (Base):
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
         if obj:
-            cls_name = obj.__class__.__name__
-            self.__session.delete(cls_name).where(cls_name.id == obj.id)
+            self.__session.delete(obj)
+            self.__session.commit()
 
 
     def reload(self):
