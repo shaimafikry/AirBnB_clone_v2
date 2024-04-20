@@ -3,7 +3,6 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, Table
 from sqlalchemy.orm import relationship
-from models.engine.file_storage import FileStorage
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -18,12 +17,15 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    reviews = relationship("Review", backref="place", cascade="all, delete")
+
+    # association table
     place_amenity = Table("place_amenity", Base.metadata,
         Column("place_id", String(60), ForeignKey("places.id"), primary_key=True,  nullable=False),
         Column("amenity_id",String(60), ForeignKey("amenities.id"), primary_key=True, nullable=False )
         )
-    amenities = relationship("Amenity", secondary="place_amenity", backref= "places", viewonly=False)
+    # relationships
+    reviews = relationship("Review", backref="place", cascade="all, delete")
+    amenities = relationship("Amenity", secondary="place_amenity", backref= "place_amenities", viewonly=False)
     city_id = ""
     user_id = ""
     name = ""
@@ -49,15 +51,17 @@ class Place(BaseModel, Base):
 #still workin here
     @property
     def amenities(self):
-        """handles append method for adding an Amenity.id to the attribute amenity_ids. This method should accept only Amenity object, otherwise, do nothing."""
+        """getter that returns the list of Amenity instances based on the attribute amenity_ids that contains all Amenity.id linked to the Place"""
         from models.amenity import Amenity
-        amen_list = []
-        data = FileStorage.all(Amenity)
-        return amen_list
+        list_obj = []
+        for i in self.amenity_ids:
+            #gets the instances based on their id
+            list_obj += [Amenity.objects.get(id=i)]
+        return list_obj
     @amenities.setter
-    def amenities():
-        
-
-
-# Getter attribute amenities that returns the list of Amenity instances based on the attribute amenity_ids that contains all Amenity.id linked to the Place
-# Setter attribute amenities that handles append method for adding an Amenity.id to the attribute amenity_ids. This method should accept only Amenity object, otherwise, do nothing.
+    def amenities(self, obj):
+        from models.amenity import Amenity
+        """Setter attribute amenities that handles append method for adding an Amenity.id to the attribute amenity_ids. This method should accept only Amenity object, otherwise, do nothing."""
+        if isinstance(obj, Amenity):
+            #appeneds to the list of amenity_ids
+            self.amenity_ids.append(obj.id)
