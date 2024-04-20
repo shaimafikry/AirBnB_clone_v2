@@ -52,9 +52,9 @@ class DBStorage ():
                     'State': State, 'City': City, 'Amenity': Amenity,
                     'Review': Review
                   }
-            for value in classes.values():
+            for cls_name ,value in classes.items():
                 data = self.__session.query(value).all()
-                name = cls.__name__
+                name = cls_name
                 key = name + '.'+ value.id
                 for i in data:
                     key = name + '.'+ i.id
