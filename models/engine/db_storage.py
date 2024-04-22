@@ -29,9 +29,9 @@ class DBStorage ():
         self.__engine = create_engine("mysql+mysqldb://"+user+':'+paswd+'@'+host+'/'+database, pool_pre_ping=True,)
         if os.getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(self.__engine)
-        Base.metadata.create_all(self.__engine)
-        session = sessionmaker(self.__engine)
-        self.__session = scoped_session(session)
+        # Base.metadata.create_all(self.__engine)
+        # session = sessionmaker(self.__engine)
+        # self.__session = scoped_session(session)
 
             
     def all(self, cls=None):
@@ -48,7 +48,7 @@ class DBStorage ():
         else:
             dict_ins = {}
             classes = {
-                    'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                    'User': User, 'Place': Place,
                     'State': State, 'City': City, 'Amenity': Amenity,
                     'Review': Review
                   }
@@ -77,12 +77,12 @@ class DBStorage ():
         """delete from the current database session obj if not None"""
         if obj:
             self.__session.delete(obj)
-            self.__session.commit()
+            # self.__session.commit()
 
 
     def reload(self):
         """import the data back"""
         Base.metadata.create_all(self.__engine)
-        sessionmaker = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(sessionmaker)
-        self.__session = Session(self.__engine)
+        session_maker = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(session_maker)
+        self.__session = Session()
