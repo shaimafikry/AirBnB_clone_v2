@@ -11,7 +11,7 @@ class State(BaseModel, Base):
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
     # Use backref to automatically create a 'state' attribute in the City class
-    cities = relationship("City", backref='state', cascade="all, delete")
+    # cities = relationship("City", backref='state', cascade="all, delete")
 
     name = ""
 
