@@ -13,8 +13,7 @@ def do_pack():
     # make the versions dir
     local("mkdir -p versions")
     # print(file_name)
-    with lcd("/data"):
-        result = local(f"tar -cvzf versions/{file_name} web_static")
+    result = local(f"tar -cvzf versions/{file_name} web_static")
     # print(result)
     if result:
         return file_name
