@@ -29,9 +29,6 @@ class DBStorage ():
         self.__engine = create_engine("mysql+mysqldb://"+user+':'+paswd+'@'+host+'/'+database, pool_pre_ping=True,)
         if os.getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(self.__engine)
-        # Base.metadata.create_all(self.__engine)
-        # session = sessionmaker(self.__engine)
-        # self.__session = scoped_session(session)
 
             
     def all(self, cls=None):

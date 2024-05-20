@@ -146,3 +146,17 @@ Usage: <class_name>.update(<_id>, <dictionary>)
 2- we updedated the do_create function to have more parametres
 3- we added a sql setp file
 4-  we added a del func and filter output of objects
+
+
+# fabric
+What is Fabric?
+    - python library used to run shell commands remotly ex: to deal with your server files
+    
+How to deploy code to a server easily?
+    
+What is a tgz archive
+How to execute Fabric command locally
+How to execute Fabric command remotely
+How to transfer files with Fabric
+How to manage Nginx configuration
+What is the difference between root and alias in a Nginx configuration
