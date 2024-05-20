@@ -7,8 +7,8 @@ sudo apt install -y nginx
 # Create the folder /data/web_static/releases/ if it doesn’t already exist
 # Create the folder /data/web_static/shared/ if it doesn’t already exist
 # Create the folder /data/web_static/releases/test/ if it doesn’t already exist
-mkdir -p /data/web_static/releases/test/
-mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared/
 # Create a fake HTML file /data/web_static/releases/test/index.html
 # (with simple content, to test your Nginx configuration)
 echo "Hello World" > /data/web_static/releases/test/index.html
@@ -17,7 +17,7 @@ echo "Hello World" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 # Give ownership of the /data/ folder to the ubuntu user AND group (you can assume this user and group exist).
 # This should be recursive; everything inside should be created/owned by this user/group
-sudo chown -R ubuntu:uduntu /data/
+sudo chown -R ubuntu:uduntu /data
 # Update the Nginx configuration to serve the content of /data/web_static/current/ to hbnb_static
 # (ex: https://mydomainname.tech/hbnb_static). Don’t forget to restart Nginx after updating the configuration:
 # Use alias inside your Nginx configuration
