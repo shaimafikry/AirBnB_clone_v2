@@ -5,7 +5,7 @@
 from fabric.api import *
 from datetime import *
 from fabric.contrib.files import exists
-env.hosts = ['ubuntu@35.175.63.155', 'ubuntu@54.226.26.233']
+env.hosts = ['35.175.63.155', '54.226.26.233']
 
 
 def do_deploy(archive_path):
