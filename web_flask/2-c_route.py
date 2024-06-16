@@ -27,7 +27,7 @@ def bnb():
 
 @app.route('/c/<text>', strict_slashes=False)
 def hello_text(text):
-    return f"C {text}"
+    return f"C {text.replace('_', ' ')}"
 
 
 if __name__ == '__main__':
