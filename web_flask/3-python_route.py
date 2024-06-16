@@ -31,8 +31,9 @@ def hello_text(text):
     return f"C {text.replace('_', ' ')}"
 
 
+@app.route('/python/', defaults={"data": "is cool"}, strict_slashes=False)
 @app.route('/python/<data>', strict_slashes=False)
-def hello_python(data="is cool"):
+def hello_python(data="is_cool"):
     return f"Python {data.replace('_', ' ')}"
 
 
