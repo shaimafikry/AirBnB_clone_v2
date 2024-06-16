@@ -38,13 +38,11 @@ def hello_python(data="is_cool"):
     return f"Python {data.replace('_', ' ')}"
 
 
-@app.route('/number/<n>', strict_slashes=False)
+# int:n takes only integers directly
+@app.route('/number/<int:n>', strict_slashes=False)
 def hello_number(n):
-    try:
-        n = int(n)
-        return f"{n} is a number"
-    except ValueError:
-        return "Not a valid integer", 400
+    n = int(n)
+    return f"{n} is a number"
 
 
 if __name__ == '__main__':
