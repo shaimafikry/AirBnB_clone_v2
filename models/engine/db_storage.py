@@ -2,21 +2,25 @@
 """ creating a database using sql with python"""
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session , sessionmaker , scoped_session
-from sqlalchemy import Column, Integer, String, ForeignKey
-from models.base_model import BaseModel , Base
+from sqlalchemy.orm import sessionmaker , scoped_session
+from models.base_model import  BaseModel, Base
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-from datetime import datetime
 
 
 # script that prints the State object with the name
 # passed as argument from the database hbtn_0e_6_usa
-class DBStorage ():
+#classes that holds vlues
+classes = {
+        'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+        }
+class DBStorage:
     """ the new engine"""
     __engine=None
     __session=None
@@ -30,33 +34,22 @@ class DBStorage ():
         if os.getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(self.__engine)
 
-            
     def all(self, cls=None):
         """get all data on the current session"""
+        # in the query i put the name not the value
         dict_ins = {}
-        name = cls.__name__
-        
         if cls:
             data = self.__session.query(cls).all()
             for i in data:
-                key = name + '.'+ i.id
-                dict[key] = i
-            return dict_ins
+                key = i.__class__.__name__ + '.'+ i.id
+                dict_ins[key] = i
         else:
-            dict_ins = {}
-            classes = {
-                    'User': User, 'Place': Place,
-                    'State': State, 'City': City, 'Amenity': Amenity,
-                    'Review': Review
-                  }
-            for cls_name ,value in classes.items():
-                data = self.__session.query(value).all()
-                name = cls_name
-                key = name + '.'+ value.id
+            for clss in classes:
+                data = self.__session.query(classes[clss]).all()
                 for i in data:
-                    key = name + '.'+ i.id
-                    dict[key] = i
-            return dict_ins
+                    key = i.__class__.__name__ + '.'+ i.id
+                    dict_ins[key] = i
+        return dict_ins
 
 
     def new(self, obj):
@@ -74,12 +67,15 @@ class DBStorage ():
         """delete from the current database session obj if not None"""
         if obj:
             self.__session.delete(obj)
-            # self.__session.commit()
 
 
     def reload(self):
         """import the data back"""
         Base.metadata.create_all(self.__engine)
-        session_maker = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(session_maker)
-        self.__session = Session()
+        ses_maker = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(ses_maker)
+        self.__session = Session
+
+    def close(self):
+        """call remove() method on the private session attribute"""
+        self.__session.remove()

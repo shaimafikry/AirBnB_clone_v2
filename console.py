@@ -10,7 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
+import models
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
@@ -222,20 +222,21 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-
         if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
+            arg = args.split(' ')[0]  # remove possible trailing args
+            if arg not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            objects_list = models.storage.all(HBNBCommand.classes[arg])
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+            objects_list = models.storage.all()
+        for k, v in objects_list.items():
+            print_list.append(str(v))
+        # this way to remove the "" from the objects coz we converted it to string
+        print("[", end="")
+        print(", ".join(print_list), end="")
+        print("]")
+        # print(print_list)
 
     def help_all(self):
         """ Help information for the all command """
