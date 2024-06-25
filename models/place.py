@@ -9,14 +9,18 @@ import models
 # association table
 if os.getenv('HBNB_TYPE_STORAGE') == "db":
     place_amenity = Table("place_amenity", Base.metadata,
-            Column("place_id", String(60), ForeignKey("places.id", onupdate='CASCADE', ondelete='CASCADE'), primary_key=True,  nullable=False),
-            Column("amenity_id",String(60), ForeignKey("amenities.id", onupdate='CASCADE', ondelete='CASCADE'), primary_key=True, nullable=False )
-            )
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id", onupdate='CASCADE',
+                                 ondelete='CASCADE'), primary_key=True,
+                                 nullable=False),
+                          Column("amenity_id", String(60),
+                                 ForeignKey("amenities.id", onupdate='CASCADE',
+                                 ondelete='CASCADE'),
+                                 primary_key=True, nullable=False))
 
-
-class Place(BaseModel, Base):
-    """ A place to stay """
-    if os.getenv('HBNB_TYPE_STORAGE') == "db":
+if os.getenv('HBNB_TYPE_STORAGE') == "db":
+    class Place(BaseModel, Base):
+        """ A place to stay """
         __tablename__ = "places"
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -30,9 +34,11 @@ class Place(BaseModel, Base):
         longitude = Column(Float, nullable=True)
         # relationships
         reviews = relationship("Review", backref="place")
-        amenities = relationship("Amenity", secondary="place_amenity", backref= "place_amenities", viewonly=False)
+        amenities = relationship("Amenity", secondary="place_amenity",
+                                 backref="place_amenities", viewonly=False)
 
-    else:
+else:
+    class Place(BaseModel):
         city_id = ""
         user_id = ""
         name = ""
@@ -45,10 +51,12 @@ class Place(BaseModel, Base):
         longitude = 0.0
         amenity_ids = []
 
-    if os.getenv('HBNB_TYPE_STORAGE') != "db":
         @property
         def reviews(self):
-            """getter attribute reviews that returns the list of Review instances with place_id equals to the current Place.id => It will be the FileStorage relationship between Place and Review"""
+            """getter attribute reviews that returns the list of Review
+            instances with place_id equals to the current Place.id =>
+            It will be the
+            FileStorage relationship between Place and Review"""
             from models.engine.file_storage import FileStorage
             from models.review import Review
             reviews_list = []
@@ -58,10 +66,12 @@ class Place(BaseModel, Base):
                     reviews_list.append(i)
             return reviews_list
 
-    #still workin here
+        # still workin here
         @property
         def amenities(self):
-            """getter that returns the list of Amenity instances based on the attribute amenity_ids that contains all Amenity.id linked to the Place"""
+            """getter that returns the list of Amenity instances based on the
+            attribute amenity_ids that contains all Amenity.id linked to the
+            Place"""
             from models.amenity import Amenity
             amenity_list = []
             all_amenities = models.storage.all(Amenity)

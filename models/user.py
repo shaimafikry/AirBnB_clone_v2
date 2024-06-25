@@ -5,10 +5,9 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 import os
 
-
-class User(BaseModel, Base):
-    """This class defines a user by various attributes"""
-    if os.getenv('HBNB_TYPE_STORAGE') == "db":
+if os.getenv('HBNB_TYPE_STORAGE') == "db":
+    class User(BaseModel, Base):
+        """This class defines a user by various attributes"""
         __tablename__ = "users"
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
@@ -16,7 +15,8 @@ class User(BaseModel, Base):
         email = Column(String(128), nullable=False)
         places = relationship("Place", backref="user")
         reviews = relationship("Review", backref="user")
-    else:
+else:
+    class User(BaseModel):
         email = ''
         password = ''
         first_name = ''

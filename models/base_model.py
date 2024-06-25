@@ -13,8 +13,10 @@ class BaseModel:
     """A base class for all hbnb models"""
     if os.getenv('HBNB_TYPE_STORAGE') == "db":
         id = Column(String(60), nullable=False, primary_key=True)
-        created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-        updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+        created_at = Column(DateTime, nullable=False,
+                            default=datetime.utcnow())
+        updated_at = Column(DateTime, nullable=False,
+                            default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
@@ -23,19 +25,21 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
         else:
-            if kwargs.get('created_at') == None:
+            if kwargs.get('created_at') is None:
                 self.created_at = datetime.now()
             else:
                 kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            if kwargs.get('updated_at') == None:
+                                                         '%Y-%m-%dT%H:%M:%S.%f'
+                                                         )
+            if kwargs.get('updated_at') is None:
                 self.updated_at = datetime.now()
             else:
                 kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            if kwargs.get('id') == None:
+                                                         '%Y-%m-%dT%H:%M:%S.%f'
+                                                         )
+            if kwargs.get('id') is None:
                 self.id = str(uuid.uuid4())
-            if kwargs.get('__class__') != None:
+            if kwargs.get('__class__') is not None:
                 del kwargs['__class__']
             self.__dict__.update(kwargs)
 
@@ -59,11 +63,12 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
-        if dictionary['_sa_instance_state']:
+        if dictionary.get('_sa_instance_state'):
             del dictionary['_sa_instance_state']
         return dictionary
 
     def delete(self):
-        """to delete the current instance from the storage (models.storage) by calling the method delete"""
+        """to delete the current instance from the storage (models.storage)
+        by calling the method delete"""
         from models import storage
         storage.delete(self)
