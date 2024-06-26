@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""This module use flask"""
 from models import *
 from models.state import State
 from flask import Flask, render_template
