@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from models import *
 from models.state import State
 from flask import Flask, render_template
