@@ -12,6 +12,7 @@ from models.amenity import Amenity
 from models.review import Review
 import models
 
+
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
@@ -113,39 +114,37 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, line):
         """ Create an object of any class"""
-        # seperate args
-        d_args = args.split(' ')
-        cls_name = d_args[0]
-        if not cls_name:
+
+        if not line:
             print("** class name missing **")
             return
-        elif cls_name not in HBNBCommand.classes:
+        params = line.split(' ')
+        class_name = params[0]
+
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        # sepreare paramteres, put it into dictionary
-        new_instance = HBNBCommand.classes[cls_name]()
-        for i in d_args[1:]:
-            i = i.split('=')
-            value = i[1]
-            # finds and replaces the _ and the "
-            value = value.replace('_', " ")
-            # case string
-            if value[0] == '"':
-                value = value.replace('"', "")
-                if '"' in value:
-                    value = value.replace('"', '\"')
-            # case float
-            elif '.' in value:
-                value = float(value)
-            # case integer
-            else:
-                value = int(value)
-            key = i[0]
-            new_instance.__dict__[key] = value
-        my_class = HBNBCommand.classes[cls_name]
-        my_class.save(new_instance)
+
+        new_dict = {}
+        for i in params[1:]:
+            if '=' in i:
+                key, value = i.split('=', 1)
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1]
+                    value = value.replace('"', "\"")
+                    value = value.replace('_', ' ')
+
+                elif '.' in value:
+                    value = float(value)
+                else:
+                    value = int(value)
+
+                new_dict[key] = value
+
+        new_instance = HBNBCommand.classes[class_name](**new_dict)
+        new_instance.save()
         print(new_instance.id)
 
     def help_create(self):
@@ -232,7 +231,7 @@ class HBNBCommand(cmd.Cmd):
             objects_list = models.storage.all()
         for k, v in objects_list.items():
             print_list.append(str(v))
-        # this way to remove the "" from the objects coz we converted it to string
+        # this way to remove the "" from objects coz we converted it to string
         print("[", end="")
         print(", ".join(print_list), end="")
         print("]")
